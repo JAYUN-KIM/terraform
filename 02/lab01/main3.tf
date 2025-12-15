@@ -9,7 +9,7 @@
 # 1. NAT Gateway 생성 -> Public Subnet
 # EIP 생성 / https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip
 resource "aws_eip" "myEIP" {
-  domain   = "vpc"
+  domain = "vpc"
   tags = {
     Name = "myEIP"
   }
@@ -76,7 +76,7 @@ resource "aws_security_group" "mySG2" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "mySG2_22" {
-  security_group_id = aws_security_group.mySG2.id  
+  security_group_id = aws_security_group.mySG2.id
   cidr_ipv4         = "0.0.0.0/0"
   from_port         = 22
   ip_protocol       = "tcp"
@@ -84,7 +84,7 @@ resource "aws_vpc_security_group_ingress_rule" "mySG2_22" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "mySG2_80" {
-  security_group_id = aws_security_group.mySG2.id  
+  security_group_id = aws_security_group.mySG2.id
   cidr_ipv4         = "0.0.0.0/0"
   from_port         = 80
   ip_protocol       = "tcp"
@@ -92,7 +92,7 @@ resource "aws_vpc_security_group_ingress_rule" "mySG2_80" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "mySG2_443" {
-  security_group_id = aws_security_group.mySG2.id  
+  security_group_id = aws_security_group.mySG2.id
   cidr_ipv4         = "0.0.0.0/0"
   from_port         = 443
   ip_protocol       = "tcp"
@@ -114,24 +114,24 @@ resource "aws_vpc_security_group_egress_rule" "mySG2_all" {
 
 
 resource "aws_instance" "myEC2-2" {
-    ami           = "ami-00e428798e77d38d9"
-    instance_type = "t3.micro"
+  ami           = "ami-00e428798e77d38d9"
+  instance_type = "t3.micro"
 
-  
-    
-    vpc_security_group_ids = [aws_security_group.mySG2.id]
-    subnet_id = aws_subnet.myPriSN.id
-    key_name = "mykeypair"
 
-    user_data = <<-EOF
+
+  vpc_security_group_ids = [aws_security_group.mySG2.id]
+  subnet_id              = aws_subnet.myPriSN.id
+  key_name               = "mykeypair"
+
+  user_data                   = <<-EOF
             #!/bin/bash
             dnf install -y httpd mod_ssl
             echo "<h1>My Web Server2</h1>" > /var/www/html/index.html
             systemctl enable --now httpd
             EOF
-    user_data_replace_on_change = true
-    tags = {
-        Name = "myEC2-2"
-    }
+  user_data_replace_on_change = true
+  tags = {
+    Name = "myEC2-2"
+  }
 
 }
